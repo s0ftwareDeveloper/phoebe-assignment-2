@@ -4,7 +4,8 @@ import java.util.Scanner;
 public class RandomNumberGame
 {
     final int MIN = 1,
-            MAX = 100;
+            MAX = 100,
+            MAX_GUESSES = 5;
     final String PICK_NUMBER = "Pick a number between " + MIN + " and " + MAX,
             OUT_OF_RANGE = "Your guess is not between " + MIN + " and " + MAX + ", please try again",
             HIGHER = "Please pick a higher number",
@@ -28,43 +29,52 @@ public class RandomNumberGame
 
     // play game
     private void guessNumber(int numToGuess) {
+        Scanner scanner = new Scanner(System.in);
+        int guessCount = 0;
+
         while (true) {
+
             // user picks a number
-            Scanner scanner = new Scanner(System.in);
             System.out.println(PICK_NUMBER);
             int userInput = scanner.nextInt();
-            System.out.println("Random Num: " + numToGuess);
 
             // validate range
-            if (userInput >= MIN && userInput <= MAX) {
-                // four more guesses
-                for (int i = 0; i < 4; i++) {
-                    // user input too small
-                    if (userInput < numToGuess) {
-                        System.out.println(HIGHER);
-                    }
-                    // user input too large
-                    else if (userInput > numToGuess) {
-                        System.out.println(LOWER);
-                    }
-                    // number guessed correctly
-                    else {
-                        System.out.println(WIN);
-                        scanner.close();
-                        return;
-                    }
+            if (userInput >= MIN && userInput <= MAX)
+            {
+                //add to guess count
+                guessCount++;
 
-                    // get next guess
-                    userInput = scanner.nextInt();
+                // number guessed correctly
+                if(userInput == numToGuess)
+                {
+                    System.out.println(WIN);
+                    //exits method
+                    return;
+                }
+                // ran out of guesses
+                else if(guessCount >= MAX_GUESSES)
+                {
+                    // too many guesses
+                    break;
+                }
+                // user input too small
+                else if (userInput < numToGuess) {
+                    System.out.println(HIGHER);
+                }
+                // user input too large
+                else {
+                    System.out.println(LOWER);
                 }
 
-                // user loses and num to guess is revealed
-                System.out.println(LOSE + numToGuess);
-                scanner.close();
-                return;
-            } else {
+            }
+            else
+            {
                 System.out.println(OUT_OF_RANGE);
             }
         }
+
+        // user loses and num to guess is revealed
+        System.out.println(LOSE + numToGuess);
+        scanner.close();
     }
 }
